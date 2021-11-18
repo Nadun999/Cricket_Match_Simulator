@@ -1,0 +1,573 @@
+import random
+import pandas as pd
+from operator import itemgetter
+
+Mumbai_India = ['Mumbai_India',
+                r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\team_data\\Mumbai_India\\Mumbai_India.xlsx']
+Chennai_SouthAfrica = ['Chennai_SouthAfrica',
+                       r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\team_data\\Chennai_SouthAfrica\\Chennai_SouthAfrica.xlsx']
+Delhi_NewZealand = ['Delhi_NewZealand',
+                    r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\team_data\\Delhi_NewZealand\\Delhi_NewZealand.xlsx']
+RoyalChallengers_Bangladesh = ['RoyalChallengers_Bangladesh',
+                               r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\team_data\\RoyalChallengers_Bangladesh\\RoyalChallengers_Bangladesh.xlsx']
+Rajastan_Australia = ['Rajastan_Australia',
+                      r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\team_data\\Rajastan_Australia\\Rajastan_Australia.xlsx']
+Kolkata_England = ['Kolkata_England',
+                   r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\team_data\\Kolkata_England\\Kolkata_England.xlsx']
+Punjab_Pakistan = ['Punjab_Pakistan',
+                   r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\team_data\\Punjab_Pakistan\\Punjab_Pakistan.xlsx']
+Sunrisers_SriLanka = ['Sunrisers_SriLanka',
+                      r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\team_data\\Sunrisers_SriLanka\\Sunrisers_SriLanka.xlsx']
+
+# https://www.freecodecamp.org/news/how-to-create-read-update-and-search-through-excel-files-using-python-c70680d811d4/
+
+# import openpyxl
+
+# myworkbook = load_workbook(r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\team_data\\points_table.xlsx')
+# worksheet= myworkbook['Sheet1']
+
+# worksheet['F1']='We are writing to B4'
+
+# import openpyxl
+
+# theFile = openpyxl.load_workbook(r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\team_data\\points_table.xlsx')
+# allSheetNames = theFile.sheetnames
+
+# print("All sheet names {} " .format(theFile.sheetnames))
+
+
+# for sheet in allSheetNames:
+#     print("Current sheet name is {}" .format(sheet))
+#     currentSheet = theFile[sheet]
+#     # print(currentSheet['B4'].value)
+
+#     #print max numbers of rows and columns for each sheet
+#     #print(currentSheet.max_row)
+#     #print(currentSheet.max_column)
+
+#     for row in range(1, currentSheet.max_row + 1):
+#         #print(row)
+#         for column in "B":  # Here you can add or reduce the columns
+#             cell_name = "{}{}".format(column, row)
+#             #print(cell_name)
+#             print("cell position {} has value {}".format(cell_name, currentSheet[cell_name].value))
+#             # ws[cell_name] = 4
+#             currentSheet[cell_name] = 4
+
+# import pandas as pd
+# from openpyxl import load_workbook
+
+# wb = load_workbook(r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\team_data\\points_table.xlsx')
+# ws = wb.active
+
+
+# for row in ws.values:
+#    for value in row:
+#      print(value)
+
+# import random
+
+
+# assinging
+Group_A = [Mumbai_India, Chennai_SouthAfrica,
+           Delhi_NewZealand, RoyalChallengers_Bangladesh]
+Group_B = [Rajastan_Australia, Kolkata_England,
+           Punjab_Pakistan, Sunrisers_SriLanka]
+
+
+match_between_A = random.sample(Group_A, 2)
+match_between_B = random.sample(Group_B, 2)
+
+
+chosen_match = [match_between_A, match_between_B]
+match_between = random.choice(chosen_match)
+
+
+print(match_between)
+
+
+# import random
+
+coin = ["heads", "tails"]
+options = ['bat', 'bowl']
+team_to_bat = []
+team_to_bowl = []
+
+visiting_team = random.choice(match_between)
+
+if visiting_team in match_between:
+    match_between.remove(visiting_team)
+
+home_team = match_between[0]
+
+
+toss = random.choice(coin)            # This simulates the coin being tossed
+# This simulates the visiting team choose bat or bowl
+choose = random.choice(options)
+# This simulates the visiting team choose head or tails
+selection = random.choice(coin)
+
+print('Home Team', home_team[0])
+print('Visiting Team', visiting_team[0])
+
+if selection == toss:
+    print(visiting_team[0], 'won the toss and chose to', choose)
+    if choose == options[0]:
+        team_to_bat = visiting_team
+        team_to_bowl = home_team
+    else:
+        team_to_bat = home_team
+        team_to_bowl = visiting_team
+
+else:
+    print(home_team[0], 'chose to', choose)
+    if choose == options[0]:
+        team_to_bat = home_team
+        team_to_bowl = visiting_team
+    else:
+        team_to_bat = visiting_team
+        team_to_bowl = home_team
+
+print('team_to_bat', team_to_bat[0])
+print('team_to_bowl', team_to_bowl[0])
+
+
+# import random
+# import pandas as pd
+# from operator import itemgetter
+
+
+first_ing_total = 0
+wickets = 0
+balls = 1
+TOTAL_WICKETS = 10
+score_card = []
+
+
+batsman_onstrike = [['name', 0, 0], True]
+batsman_offstrike = [['name', 0, 0], False]
+
+
+bowler_onstrike = []
+
+
+# batsman_name , runs , balls_faced , method of dismissal , bowler
+# importing batting team
+batting_url = team_to_bat[1]
+batting_team = pd.read_excel(batting_url)
+# converting excel to python list
+yet_to_bat = batting_team.values.tolist()
+
+# bowlers_name , balls , runs , wickets
+# importing bowling team
+bowling_url = team_to_bowl[1]
+bowling_team = pd.read_excel(bowling_url)
+# converting excel to python list
+bowling_team_list = bowling_team.values.tolist()
+
+
+yet_to_bowl = []
+
+for i in reversed(range(len(bowling_team_list))):
+    if len(yet_to_bowl) < 5:
+        yet_to_bowl.append([bowling_team_list[i][0], 0, 0, 0])
+
+
+dismissed_batsmen = []
+batsman_list = []
+
+
+# method of dismissal
+method_of_dismissal = ['Bowled', 'Caught', 'LBW']
+
+
+bowler_score = 0  # score counting variable for bowler
+batter_score = 0  # score counting variable for batsman
+
+
+# opening batsmen coming to the field
+batsman_onstrike[0] = yet_to_bat.pop(0)
+batsman_offstrike[0] = yet_to_bat.pop(0)
+
+
+# opening bowler
+bowler_onstrike = yet_to_bowl.pop(0)
+
+
+while balls < 61:
+    if wickets == TOTAL_WICKETS:
+        break
+    else:
+        if ((balls-1) > 0 and (balls-1) % 6 == 0) and (len(yet_to_bowl)) > 0:
+            yet_to_bowl.append(bowler_onstrike)
+            # bowler_onstrike[0] = []
+            bowler_onstrike = yet_to_bowl.pop(0)
+
+        # get random scores for bowler and batsman
+        bowler_score = random.randint(1, 6)
+        batter_score = random.randint(0, 6)
+
+        if bowler_score == batter_score:
+            # adding wickets to bowler
+            current_bowler_onstrike_wickets = 0
+            current_bowler_onstrike_wickets = bowler_onstrike[3]
+            bowler_onstrike[3] = current_bowler_onstrike_wickets + 1
+            # adding balls to batsman
+            current_batsman_onstrike_balls = batsman_onstrike[0][2]
+            batsman_onstrike[0][2] = current_batsman_onstrike_balls + 1
+
+            # moving the dismissed_batsmen to dismissed_batsmen array
+            dismissed_batsmen.append(batsman_onstrike[0])
+
+            # adding method of dismissal to batsman
+            current_batsman_method_of_dismissal = random.choices(
+                method_of_dismissal)
+            batsman_onstrike[0][3] = current_batsman_method_of_dismissal[0]
+
+            # adding dismissed bowler name to batsman
+            current_batsman_bowler_dismissed = batsman_onstrike[0][4]
+            batsman_onstrike[0][4] = current_batsman_bowler_dismissed + \
+                str(bowler_onstrike[0])
+
+            # fall of wickets
+            print('FOW', first_ing_total, ' --> ', wickets+1, ' on over -',
+                  int(balls/6), '.', (balls) % 6, batsman_onstrike[0][0])
+
+            # bring new batsman to the crease (batsman_onstrike)
+            if len(yet_to_bat) > 0:
+                batsman_onstrike[0] = []
+                batsman_onstrike[0] = yet_to_bat.pop(0)
+
+            # out - add wicket to wickets
+            wickets += 1
+
+        else:
+            # adding batter_score to current_batsman
+            current_batsman_onstrike_score = 0
+            current_batsman_onstrike_score = batsman_onstrike[0][1]
+            batsman_onstrike[0][1] = current_batsman_onstrike_score + batter_score
+
+            # adding balls to current_batsman
+            current_batsman_onstrike_balls = batsman_onstrike[0][2]
+            batsman_onstrike[0][2] = current_batsman_onstrike_balls + 1
+
+            # adding batter_score to current_bowler
+            current_bowler_onstrike_runs = 0
+            current_bowler_onstrike_runs = bowler_onstrike[2]
+            bowler_onstrike[2] = current_bowler_onstrike_runs + batter_score
+
+            # swapping onstrike batsman when strike rotates
+            if batter_score == 1 or batter_score == 3:
+                current_batsman = batsman_onstrike[0]
+                # swapping onstrike batsman
+                batsman_onstrike[0] = batsman_offstrike[0]
+                batsman_offstrike[0] = current_batsman
+            else:
+                pass  # when batter_score is not swapping
+
+            # add batter score to first_ing_total
+            first_ing_total += batter_score
+
+    # adding balls to bowler
+    current_bowler_onstrike_balls = 0
+    current_bowler_onstrike_balls = bowler_onstrike[1]
+    bowler_onstrike[1] = current_bowler_onstrike_balls + 1
+    balls += 1
+
+# last dismissed batsman
+last_dismissal = dismissed_batsmen[-1]
+# print('Last dismissal', last_dismissal)
+
+# add dismissed_batsmen to batsman_list
+batsman_list = dismissed_batsmen
+
+# add each batsman in yet_to_bat to batsman_list array for displaying purposes
+if len(yet_to_bat) > 0:
+    for i in range(len(yet_to_bat)):
+        batsman_list.append(yet_to_bat[i])
+
+# add on and off strike batsmen to batsman_list
+if wickets != TOTAL_WICKETS:
+    batsman_onstrike[0][3] = '* NOT OUT'
+    batsman_list.append(batsman_onstrike[0])
+
+batsman_offstrike[0][3] = 'NOT OUT'
+batsman_list.append(batsman_offstrike[0])
+
+# add batsman_list to score_card
+score_card = batsman_list
+
+
+# Total
+# print(' Total-', first_ing_total, ' wickets -', wickets, ' overs -', int((balls-1)/6), '.', (balls-1) % 6, ' balls', (balls-1))
+
+
+# sort score_card to the original batting order
+sorted_list = sorted(score_card, key=itemgetter(5))
+
+
+# Print score_card in a data frame
+df_score_card = pd.DataFrame(sorted_list)
+# print(df_score_card)
+
+
+# add bowlers to bowler_list
+bowler_list = yet_to_bowl
+bowler_list.append(bowler_onstrike)
+
+df_bowler_list = pd.DataFrame(bowler_list)
+# print(df_bowler_list)
+
+
+print('\nTotal-', first_ing_total, '\nwickets -', wickets, '\novers -',
+      int((balls-1)/6), '.', (balls-1) % 6, '\nballs', (balls-1))
+print('\nLast dismissal', last_dismissal)
+
+new_headers = ['Batting', 'Runs', 'Balls Faced', 'MOD', 'Bowler', 'Batting No']
+df_score_card.columns = new_headers
+df_score_card_without_index = df_score_card.set_index('Batting')
+df_score_card_without_index
+
+new_headers = ['Bowling', 'Balls', 'Runs', 'Wickets']
+df_bowler_list.columns = new_headers
+df_bowler_list_without_index = df_bowler_list.set_index('Bowling')
+df_bowler_list_without_index
+
+# # this is the way to write data to excel file
+# # Creating Excel Writer Object from Pandas
+
+# writer = pd.ExcelWriter('test.xlsx',engine='xlsxwriter')
+# workbook=writer.book
+# worksheet=workbook.add_worksheet('Validation')
+# writer.sheets['Validation'] = worksheet
+# df_score_card.to_excel(writer,sheet_name='Validation',startrow=0 , startcol=0)
+# df_bowler_list.to_excel(writer,sheet_name='Validation',startrow=19, startcol=0)
+
+# writer.save()
+# writer.close()
+
+
+# import random
+# import pandas as pd
+# from operator import itemgetter
+
+
+second_ing_total = 0
+wickets = 0
+balls = 1
+TOTAL_WICKETS = 10
+score_card = []
+
+
+batsman_onstrike = [['name', 0, 0], True]
+batsman_offstrike = [['name', 0, 0], False]
+
+
+bowler_onstrike = []
+
+
+# batsman_name , runs , balls_faced , method of dismissal , bowler
+# importing batting team
+batting_url = team_to_bowl[1]
+batting_team = pd.read_excel(batting_url)
+# converting excel to python list
+yet_to_bat = batting_team.values.tolist()
+
+
+# bowlers_name , balls , runs , wickets
+# importing bowling team
+bowling_url = team_to_bat[1]
+bowling_team = pd.read_excel(bowling_url)
+# converting excel to python list
+bowling_team_list = bowling_team.values.tolist()
+
+
+yet_to_bowl = []
+
+
+for i in reversed(range(len(bowling_team_list))):
+    if len(yet_to_bowl) < 5:
+        yet_to_bowl.append([bowling_team_list[i][0], 0, 0, 0])
+
+
+dismissed_batsmen = []
+batsman_list = []
+
+
+# method of dismissal
+method_of_dismissal = ['Bowled', 'Caught', 'LBW']
+
+
+bowler_score = 0  # score counting variable for bowler
+batter_score = 0  # score counting variable for batsman
+
+
+# opening batsmen coming to the field
+batsman_onstrike[0] = yet_to_bat.pop(0)
+batsman_offstrike[0] = yet_to_bat.pop(0)
+
+
+# opening bowler
+bowler_onstrike = yet_to_bowl.pop(0)
+
+
+while balls < 61:
+    if ((wickets == TOTAL_WICKETS) or (second_ing_total > first_ing_total)):
+        break
+    else:
+        if ((balls-1) > 0 and (balls-1) % 6 == 0) and (len(yet_to_bowl)) > 0:
+            yet_to_bowl.append(bowler_onstrike)
+            # bowler_onstrike[0] = []
+            bowler_onstrike = yet_to_bowl.pop(0)
+
+        # get random scores for bowler and batsman
+        bowler_score = random.randint(1, 6)
+        batter_score = random.randint(0, 6)
+
+        if bowler_score == batter_score:
+            # adding wickets to bowler
+            current_bowler_onstrike_wickets = 0
+            current_bowler_onstrike_wickets = bowler_onstrike[3]
+            bowler_onstrike[3] = current_bowler_onstrike_wickets + 1
+            # adding balls to batsman
+            current_batsman_onstrike_balls = batsman_onstrike[0][2]
+            batsman_onstrike[0][2] = current_batsman_onstrike_balls + 1
+
+            # moving the dismissed_batsmen to dismissed_batsmen array
+            dismissed_batsmen.append(batsman_onstrike[0])
+
+            # adding method of dismissal to batsman
+            current_batsman_method_of_dismissal = random.choices(
+                method_of_dismissal)
+            batsman_onstrike[0][3] = current_batsman_method_of_dismissal[0]
+
+            # adding dismissed bowler name to batsman
+            current_batsman_bowler_dismissed = batsman_onstrike[0][4]
+            batsman_onstrike[0][4] = current_batsman_bowler_dismissed + \
+                str(bowler_onstrike[0])
+
+            # fall of wickets
+            print('FOW', second_ing_total, ' --> ', wickets+1, ' on over -',
+                  int(balls/6), '.', (balls) % 6, batsman_onstrike[0][0])
+
+            # bring new batsman to the crease (batsman_onstrike)
+            if len(yet_to_bat) > 0:
+                batsman_onstrike[0] = []
+                batsman_onstrike[0] = yet_to_bat.pop(0)
+
+            # out - add wicket to wickets
+            wickets += 1
+
+        else:
+            # adding batter_score to current_batsman
+            current_batsman_onstrike_score = 0
+            current_batsman_onstrike_score = batsman_onstrike[0][1]
+            batsman_onstrike[0][1] = current_batsman_onstrike_score + batter_score
+
+            # adding balls to current_batsman
+            current_batsman_onstrike_balls = batsman_onstrike[0][2]
+            batsman_onstrike[0][2] = current_batsman_onstrike_balls + 1
+
+            # adding batter_score to current_bowler
+            current_bowler_onstrike_runs = 0
+            current_bowler_onstrike_runs = bowler_onstrike[2]
+            bowler_onstrike[2] = current_bowler_onstrike_runs + batter_score
+
+            # swapping onstrike batsman when strike rotates
+            if batter_score == 1 or batter_score == 3:
+                current_batsman = batsman_onstrike[0]
+                # swapping onstrike batsman
+                batsman_onstrike[0] = batsman_offstrike[0]
+                batsman_offstrike[0] = current_batsman
+            else:
+                pass  # when batter_score is not swapping
+
+            # add batter score to second_ing_total
+            second_ing_total += batter_score
+
+    # adding balls to bowler
+    current_bowler_onstrike_balls = 0
+    current_bowler_onstrike_balls = bowler_onstrike[1]
+    bowler_onstrike[1] = current_bowler_onstrike_balls + 1
+    balls += 1
+
+# last dismissed batsman
+# last_dismissal = dismissed_batsmen[-1]
+# print('Last dismissal', last_dismissal)
+
+# add dismissed_batsmen to batsman_list
+batsman_list = dismissed_batsmen
+
+# add each batsman in yet_to_bat to batsman_list array for displaying purposes
+if len(yet_to_bat) > 0:
+    for i in range(len(yet_to_bat)):
+        batsman_list.append(yet_to_bat[i])
+
+# add on and off strike batsmen to batsman_list
+if wickets != TOTAL_WICKETS:
+    batsman_onstrike[0][3] = '* NOT OUT'
+    batsman_list.append(batsman_onstrike[0])
+
+batsman_offstrike[0][3] = 'NOT OUT'
+batsman_list.append(batsman_offstrike[0])
+
+# add batsman_list to score_card
+score_card = batsman_list
+
+
+# Total
+# print(' Total-', second_ing_total, ' wickets -', wickets, ' overs -', int((balls-1)/6), '.', (balls-1) % 6, ' balls', (balls-1))
+
+# sort score_card to the original batting order
+sorted_list = sorted(score_card, key=itemgetter(5))
+
+# Print score_card in a data frame
+df_score_card = pd.DataFrame(sorted_list)
+# print(df_score_card)
+
+
+# add bowlers to bowler_list
+bowler_list = yet_to_bowl
+bowler_list.append(bowler_onstrike)
+
+df_bowler_list = pd.DataFrame(bowler_list)
+# print(df_bowler_list)
+
+
+print('\nTotal-', second_ing_total, '\nwickets -', wickets, '\novers -',
+      int((balls-1)/6), '.', (balls-1) % 6, '\nballs', (balls-1))
+print('\nLast dismissal', last_dismissal)
+
+new_headers = ['Batting', 'Runs', 'Balls Faced', 'MOD', 'Bowler', 'Batting No']
+df_score_card.columns = new_headers
+df_score_card_without_index = df_score_card.set_index('Batting')
+df_score_card_without_index
+
+new_headers = ['Bowling', 'Balls', 'Runs', 'Wickets']
+df_bowler_list.columns = new_headers
+df_bowler_list_without_index = df_bowler_list.set_index('Bowling')
+df_bowler_list_without_index
+
+# this is the way to write data to excel file
+# Creating Excel Writer Object from Pandas
+
+# writer = pd.ExcelWriter('test.xlsx',engine='xlsxwriter')
+# workbook=writer.book
+# worksheet=workbook.add_worksheet('Validation')
+# writer.sheets['Validation'] = worksheet
+# df_score_card.to_excel(writer,sheet_name='Validation',startrow=0 , startcol=0)
+# df_bowler_list.to_excel(writer,sheet_name='Validation',startrow=19, startcol=0)
+
+# writer.save()
+# writer.close()
+
+if (second_ing_total > first_ing_total):
+    print('second_ing_total', second_ing_total)
+    print(team_to_bowl[0].replace('_', ' '),
+          'Won by', TOTAL_WICKETS-wickets, 'wickets')
+elif (second_ing_total < first_ing_total):
+    print('first_ing_total', first_ing_total)
+    print(team_to_bat[0].replace('_', ' '), 'Won by',
+          (first_ing_total-second_ing_total), 'runs')
+else:
+    print('Match drawn')
