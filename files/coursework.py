@@ -31,6 +31,25 @@ Group_B = [Rajastan_Australia, Kolkata_England,
 
 user_input = ''
 global_exit = ''
+TOTAL_WICKETS = 10
+TOTAL_BALLS = 120
+first_ing_total = 0
+first_ing_wickets = 0
+second_ing_total = 0
+second_ing_wickets = 0
+match_between = []
+team_to_bat = []
+team_to_bowl = []
+visiting_team = []
+home_team = []
+filename_match = ''
+selection = ''
+toss = ''
+choose = ''
+df_score_card_first_ing_without_index = []
+df_bowler_list_first_ing_without_index = []
+df_score_card_second_ing_without_index = []
+df_bowler_list_second_ing_without_index = []
 
 
 def GetTeam(teamName):
@@ -119,23 +138,9 @@ def generate_random_match():
     match_between_B = random.sample(Group_B, 2)
 
     chosen_match = [match_between_A, match_between_B]
+    global match_between
     match_between = random.choice(chosen_match)
     print(match_between)
-
-
-while user_input != 'x':
-    user_input = input(
-        "\n\nPress the desired number for your action... \n\nPlay a new match - 1 \nView/edit team/player profile - 2 \npress 'x' to exit...  ")
-
-    if user_input == '1':
-        generate_random_match()
-    elif user_input == '2':
-        team_profile_edit(user_input)
-        global_exit = ''
-    elif user_input == 'x':
-        break
-
-print("\n---------------------------------------------Thank you for playing!!!-------------------------------------------------------")
 
 
 def points_table():
@@ -180,8 +185,13 @@ def points_table():
 def toss():
     coin = ["heads", "tails"]
     options = ['bat', 'bowl']
-    team_to_bat = []
-    team_to_bowl = []
+    global team_to_bat
+    global team_to_bowl
+    global visiting_team
+    global home_team
+    global selection
+    global toss
+    global choose
 
     visiting_team = random.choice(match_between)
 
@@ -223,11 +233,14 @@ def toss():
 
 
 def first_innings():
+    global filename_match
+    global first_ing_total
+    global first_ing_wickets
+    global df_score_card_first_ing_without_index
+    global df_bowler_list_first_ing_without_index
     first_ing_total = 0
     first_ing_wickets = 0
     first_ing_balls = 1
-    first_ing_TOTAL_WICKETS = 10
-    first_ing_TOTAL_BALLS = 120
     score_card_first_ing = []
 
     batsman_onstrike = [['name', 0, 0], True]
@@ -271,8 +284,8 @@ def first_innings():
     # opening bowler
     bowler_onstrike = yet_to_bowl.pop(0)
 
-    while (first_ing_balls < (first_ing_TOTAL_BALLS+1)):
-        if first_ing_wickets == first_ing_TOTAL_WICKETS:
+    while (first_ing_balls < (TOTAL_BALLS+1)):
+        if first_ing_wickets == TOTAL_WICKETS:
             break
         else:
             if ((first_ing_balls-1) > 0 and (first_ing_balls-1) % 6 == 0) and (len(yet_to_bowl)) > 0:
@@ -369,7 +382,7 @@ def first_innings():
             batsman_list.append(yet_to_bat[i])
 
     # add on and off strike batsmen to batsman_list
-    if first_ing_wickets != first_ing_TOTAL_WICKETS:
+    if first_ing_wickets != TOTAL_WICKETS:
         batsman_onstrike[0][3] = '* NOT OUT'
         batsman_list.append(batsman_onstrike[0])
 
@@ -454,13 +467,14 @@ def first_innings():
     writer.close()
 
 
-def second_innings(first_ing_total_param):
-    first_ing_total = first_ing_total_param
+def second_innings():
+    global second_ing_total
+    global second_ing_wickets
+    global df_score_card_second_ing_without_index
+    global df_bowler_list_second_ing_without_index
     second_ing_total = 0
     second_ing_wickets = 0
     second_ing_balls = 1
-    second_ing_TOTAL_WICKETS = 10
-    second_ing_TOTAL_BALLS = 120
     score_card_second_ing = []
 
     batsman_onstrike = [['name', 0, 0], True]
@@ -504,8 +518,8 @@ def second_innings(first_ing_total_param):
     # opening bowler
     bowler_onstrike = yet_to_bowl.pop(0)
 
-    while (second_ing_balls < (second_ing_TOTAL_BALLS+1)):
-        if ((second_ing_wickets == second_ing_TOTAL_WICKETS) or (second_ing_total > first_ing_total)):
+    while (second_ing_balls < (TOTAL_BALLS+1)):
+        if ((second_ing_wickets == TOTAL_WICKETS) or (second_ing_total > first_ing_total)):
             break
         else:
             if ((second_ing_balls-1) > 0 and (second_ing_balls-1) % 6 == 0) and (len(yet_to_bowl)) > 0:
@@ -600,7 +614,7 @@ def second_innings(first_ing_total_param):
             batsman_list.append(yet_to_bat[i])
 
     # add on and off strike batsmen to batsman_list
-    if second_ing_wickets != second_ing_TOTAL_WICKETS:
+    if second_ing_wickets != TOTAL_WICKETS:
         batsman_onstrike[0][3] = '* NOT OUT'
         batsman_list.append(batsman_onstrike[0])
 
@@ -729,3 +743,24 @@ def match_summary():
               (first_ing_total-second_ing_total), 'runs')
     else:
         print('Match drawn')
+
+
+while user_input != 'x':
+    user_input = input(
+        "\n\nPress the desired number for your action... \n\nPlay a new match - 1 \nView/edit team/player profile - 2 \npress 'x' to exit...  ")
+
+    if user_input == '1':
+        generate_random_match()
+        points_table()
+        toss()
+        first_innings()
+        second_innings()
+        match_summary()
+
+    elif user_input == '2':
+        team_profile_edit(user_input)
+        global_exit = ''
+    elif user_input == 'x':
+        break
+
+print("\n---------------------------------------------Thank you for playing!!!-------------------------------------------------------")
