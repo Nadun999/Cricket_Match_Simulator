@@ -158,6 +158,7 @@ def generate_random_match():
                 break
     else:
         match_between = []
+        raise IndexError('A very specific bad thing happened.')
 
 
 def points_table():
@@ -198,7 +199,7 @@ def points_table():
     writer.close()
 
 
-def toss():
+def toss_nadun():
     coin = ["heads", "tails"]
     options = ['bat', 'bowl']
     global team_to_bat
