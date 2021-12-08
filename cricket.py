@@ -3,6 +3,7 @@ from openpyxl import load_workbook
 import random
 import pandas as pd
 from operator import itemgetter
+import os
 # ------------------------------------------------------------------------------------------Store information about teams and players.---------------------------------------------------------------------------------
 Mumbai_India = ['Mumbai_India',
                 r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\team_data\\Mumbai_India\\Mumbai_India.xlsx']
@@ -48,7 +49,8 @@ df_score_card_first_ing_without_index = []
 df_bowler_list_first_ing_without_index = []
 df_score_card_second_ing_without_index = []
 df_bowler_list_second_ing_without_index = []
-
+winning_team = []
+losing_team = []
 # ---------------------------------------------------------------------------------------------------Defining the functions----------------------------------------------------------------------------------------------
 
 
@@ -129,20 +131,39 @@ def team_profile_edit(getData):
 
 
 def generate_random_match():
-    match_between_A = random.sample(Group_A, 2)
-    match_between_B = random.sample(Group_B, 2)
+    match_list = os.listdir(
+        r'E:\\IIT\\1st Year\\1st Trimester\CM1601 [PRO]  Programming Fundamentals\\Course Work\\tournament\\matches')
+    match_list_count = len(match_list)
+    match_list_count = match_list_count if match_list_count > 0 else 1
+    # print(match_list_count)
 
-    chosen_match = [match_between_A, match_between_B]
-    global match_between
-    match_between = random.choice(chosen_match)
-    print(match_between)
+    if match_list_count != 12:
+        for i in range(match_list_count):
+            match_between_A = random.sample(Group_A, 2)
+            match_between_B = random.sample(Group_B, 2)
+
+            chosen_match = [match_between_A, match_between_B]
+            global match_between
+            match_between = random.choice(chosen_match)
+
+            temp1 = str(match_between[0][0]) + '_vs_' + \
+                str(match_between[1][0]+'.xlsx')
+            temp2 = str(match_between[1][0]) + '_vs_' + \
+                str(match_between[0][0]+'.xlsx')
+            # print(temp)
+            if (temp1 in match_list) or (temp2 in match_list):
+                print('match duplicate')
+                continue
+            else:
+                break
+    else:
+        match_between = []
 
 
 def points_table():
     points_table = pd.read_excel(
         r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\tournament\\points_table.xlsx')
     df_points_table = pd.DataFrame(points_table)
-    df_points_table
 
     for team in match_between:
 
@@ -150,8 +171,10 @@ def points_table():
             group = "Group A"
         else:
             group = "Group B"
+
         find_team_index = df_points_table.index[df_points_table[group] == team[0]].tolist(
         )
+
         if(group == "Group A"):
             current_match_count = df_points_table.at[find_team_index[0], 'Matches_A']
             df_points_table.at[find_team_index,
@@ -160,9 +183,7 @@ def points_table():
             current_match_count = df_points_table.at[find_team_index[0], 'Matches_B']
             df_points_table.at[find_team_index,
                                'Matches_B'] = current_match_count+1
-        print(find_team_index, group, current_match_count)
-
-    print(df_points_table)
+        print('\n\n')
 
     # ------------------------------------------------------------------------Write data to excel file by creating Excel Writer Object from Pandas---------------------------------------------------------------------
 
@@ -173,7 +194,6 @@ def points_table():
     writer.sheets['Validation'] = worksheet
     df_points_table.to_excel(writer, sheet_name='Validation',
                              startrow=0, startcol=0, index=False)
-
     writer.save()
     writer.close()
 
@@ -203,8 +223,10 @@ def toss():
     # This simulates the visiting team choose bat or bowl
     choose = random.choice(options)
 
+    print('\n\n')
     print('Home Team - ', home_team[0])
     print('Visiting Team - ', visiting_team[0])
+    print('\n\n')
 
     if selection == toss:
         print(visiting_team[0], 'won the toss and chose to', choose)
@@ -224,8 +246,10 @@ def toss():
             team_to_bat = visiting_team
             team_to_bowl = home_team
 
-    print('team_to_bat', team_to_bat[0])
+    print('\n\n')
+    print('\n\nteam_to_bat', team_to_bat[0])
     print('team_to_bowl', team_to_bowl[0])
+    print('\n\n')
 
 
 def player_standings(batting, bowling):
@@ -274,9 +298,10 @@ def display_player_standings():
     player_standings = pd.read_excel(
         r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\tournament\\player_standings.xlsx')
     df_player_standings = pd.DataFrame(player_standings)
-
+    print('\n\nTop 5 run scores of the tournament')
     print(df_player_standings[['PLAYER NAME', 'TOTAL RUNS']].nlargest(
         5, 'TOTAL RUNS').to_string(index=False))
+    print('\n\nTop 5 wicket takers of the tournament')
     print(df_player_standings[['PLAYER NAME', 'WICKETS']].nlargest(
         5, 'WICKETS').to_string(index=False))
 
@@ -450,7 +475,6 @@ def first_innings():
 
     # convert score_card_first_ing to a data frame for displaying
     df_score_card_first_ing = pd.DataFrame(sorted_list)
-    print(sorted_list)
 
     # converting bowler first_ing_balls to overs
     for bowler_overs_first_ing in bowler_list_first_ing:
@@ -464,8 +488,9 @@ def first_innings():
 
     # convert df_bowler_list_first_ing to a data frame for displaying
     df_bowler_list_first_ing = pd.DataFrame(bowler_list_first_ing)
-    print(bowler_list_first_ing)
 
+    print('\n\n-------------------------------------------------1st Innings Summary-------------------------------------------')
+    print('\n')
     print('\nTotal-', first_ing_total, '\nwickets -', first_ing_wickets,
           '\novers -', int((first_ing_balls-1)/6), '.', (first_ing_balls-1) % 6, '\nballs', (first_ing_balls-1))
     # print('Extras - ',extras_first_ing)
@@ -476,6 +501,8 @@ def first_innings():
     df_score_card_first_ing.columns = new_headers
     df_score_card_first_ing_without_index = df_score_card_first_ing.set_index(
         'Batting')
+    print('\n\n------------------------------------------------1st Innings Scorecard-------------------------------------------')
+    print('\n')
     print(df_score_card_first_ing_without_index)
 
     overs = str(int((first_ing_balls-1)/6)) + \
@@ -485,13 +512,16 @@ def first_innings():
 
     df_first_ing_summary = pd.DataFrame(first_ing_summary, columns=[
                                         'Total', 'Wickets', 'Overs', 'Balls'])
-    print(df_first_ing_summary.to_string(index=False))
+    # print(df_first_ing_summary.to_string(index=False))
 
     new_headers = ['Bowling', 'Overs', 'Runs', 'Wickets', 'Economy']
     df_bowler_list_first_ing.columns = new_headers
     df_bowler_list_first_ing_without_index = df_bowler_list_first_ing.set_index(
         'Bowling')
+    print('\n\n---------------------------------------------1st Innings Bowling figures------------------------------------------')
+    print('\n')
     print(df_bowler_list_first_ing_without_index)
+    print('\n\n')
 
     # ----------------------------------------------------------------------Write data to excel file by creating Excel Writer Object from Pandas-------------------------------------------------------------------------
 
@@ -516,7 +546,7 @@ def first_innings():
 
     writer.save()
     writer.close()
-
+    print('\n\n')
     # --------------------------------------------------------------------------------------------Update player standings------------------------------------------------------------------------------------------------
     player_standings(score_card_first_ing, bowler_list_first_ing)
 
@@ -701,6 +731,7 @@ def second_innings():
     # convert df_bowler_list_second_ing to a data frame for displaying
     df_bowler_list_second_ing = pd.DataFrame(bowler_list_second_ing)
 
+    print('\n\n------------------------------------------------------2nd Innings Summary---------------------------------')
     print('\nTotal-', second_ing_total, '\nwickets -', second_ing_wickets,
           '\novers -', int((second_ing_balls-1)/6), '.', (second_ing_balls-1) % 6, '\nballs', (second_ing_balls-1))
     # print('Extras',extras_second_ing)
@@ -711,6 +742,8 @@ def second_innings():
     df_score_card_second_ing.columns = new_headers
     df_score_card_second_ing_without_index = df_score_card_second_ing.set_index(
         'Batting')
+    print('\n\n--------------------------------------------------2nd Innings Scorecard-----------------------------------')
+    print('\n')
     print(df_score_card_second_ing_without_index)
 
     overs = str(int((second_ing_balls-1)/6)) + \
@@ -720,13 +753,15 @@ def second_innings():
 
     df_second_ing_summary = pd.DataFrame(second_ing_summary, columns=[
         'Total', 'Wickets', 'Overs', 'Balls'])
-    print(df_second_ing_summary.to_string(index=False))
 
     new_headers = ['Bowling', 'Overs', 'Runs', 'Wickets', 'Economy']
     df_bowler_list_second_ing.columns = new_headers
     df_bowler_list_second_ing_without_index = df_bowler_list_second_ing.set_index(
         'Bowling')
+    print('\n\n----------------------------------------------2nd Innings Bowling figures-----------------------------------')
+    print('\n')
     print(df_bowler_list_second_ing_without_index)
+    print('\n\n')
 
     # -----------------------------------------------------------------------Write data to excel file by creating Excel Writer Object from Pandas-----------------------------------------------------------------------
 
@@ -753,51 +788,130 @@ def second_innings():
     writer.save()
     writer.close()
 
-    # --------------------------------------------------------------------------------------------Update player standings-----------------------------------------------------------------------------------------------
-
+    # --------------------------------------------------------------------------------------------Update player standings--------------------------------------------------------------------------------------------
     player_standings(score_card_second_ing, bowler_list_second_ing)
+
+
+def update_points_table(winning_team, losing_team):
+    update_points_table = pd.read_excel(
+        r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\tournament\\points_table.xlsx')
+    df_update_points_table = pd.DataFrame(update_points_table)
+
+    if(winning_team in Group_A):
+        group = "Group A"
+        find_points_table_index = df_update_points_table.index[df_update_points_table[group] == winning_team[0]].tolist(
+        )
+        current_wins_count = df_update_points_table.at[find_points_table_index[0], 'Won']
+        df_update_points_table.at[find_points_table_index,
+                                  'Won'] = current_wins_count+1
+
+        find_points_table_index = df_update_points_table.index[df_update_points_table[group] == losing_team[0]].tolist(
+        )
+        current_loss_count = df_update_points_table.at[find_points_table_index[0], 'Lost']
+        df_update_points_table.at[find_points_table_index,
+                                  'Lost'] = current_loss_count+1
+
+        find_points_table_index = df_update_points_table.index[df_update_points_table[group] == winning_team[0]].tolist(
+        )
+        current_points_count = df_update_points_table.at[find_points_table_index[0], 'Points']
+        df_update_points_table.at[find_points_table_index,
+                                  'Points'] = current_points_count+2
+
+    elif(winning_team in Group_B):
+        group = "Group B"
+        find_points_table_index = df_update_points_table.index[df_update_points_table[group] == winning_team[0]].tolist(
+        )
+        current_wins_count = df_update_points_table.at[find_points_table_index[0], 'Won_B']
+        df_update_points_table.at[find_points_table_index,
+                                  'Won_B'] = current_wins_count+1
+
+        find_points_table_index = df_update_points_table.index[df_update_points_table[group] == losing_team[0]].tolist(
+        )
+        current_loss_count = df_update_points_table.at[find_points_table_index[0], 'Lost_B']
+        df_update_points_table.at[find_points_table_index,
+                                  'Lost_B'] = current_loss_count+1
+
+        find_points_table_index = df_update_points_table.index[df_update_points_table[group] == winning_team[0]].tolist(
+        )
+        current_points_count = df_update_points_table.at[find_points_table_index[0], 'Points_B']
+        df_update_points_table.at[find_points_table_index,
+                                  'Points_B'] = current_points_count+2
+
+    writer = pd.ExcelWriter(
+        r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\tournament\\points_table.xlsx', engine='xlsxwriter')
+    workbook = writer.book
+    worksheet = workbook.add_worksheet('Sheet1')
+    writer.sheets['Sheet1'] = worksheet
+    df_update_points_table.to_excel(
+        writer, sheet_name='Sheet1', startrow=0, startcol=0, index=False)
+
+    writer.save()
+    writer.close()
+
+
+def display_points_table():
+    update_points_table = pd.read_excel(
+        r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\tournament\\points_table.xlsx')
+    df_update_points_table = pd.DataFrame(update_points_table)
+
+    print(df_update_points_table)
 
 
 def match_summary():
     # Toss
-
     if selection == toss:
+        print('\n\n---------------------------------------------Match Summary------------------------------------------')
         print(visiting_team[0].replace('_', ' '),
-              'won the toss and chose to', choose)
+              'Won the toss and chose to', choose)
+        print('\n')
     else:
         print(home_team[0].replace('_', ' '),
-              'won the toss and chose to', choose)
+              'Won the toss and chose to', choose)
+        print('\n')
 
-    # first innings top performers
-
+    print('---------------------------------------------First Innings Top Performers---------------------------------\n\n')
     print(team_to_bat[0].replace('_', ' '))
     print(df_score_card_first_ing_without_index.nlargest(4, 'Runs'))
 
     print('\n', team_to_bowl[0].replace('_', ' '))
     print(df_bowler_list_first_ing_without_index.nlargest(3, 'Wickets'))
 
-    print('\nTotal', first_ing_total, '/', first_ing_wickets)
+    print('\n\nTotal', first_ing_total, '/', first_ing_wickets)
+    print('\n')
 
-    # second innings top performers
-
+    print('---------------------------------------------Second Innings Top Performers---------------------------------\n\n')
     print(team_to_bowl[0].replace('_', ' '))
     print(df_score_card_second_ing_without_index.nlargest(4, 'Runs'))
 
     print('\n', team_to_bat[0].replace('_', ' '))
     print(df_bowler_list_second_ing_without_index.nlargest(3, 'Wickets'))
 
-    print('\nTarget', first_ing_total+1)
+    print('\n\nTarget', first_ing_total+1)
     print('Total', second_ing_total, '/', second_ing_wickets)
+    print('\n\n')
 
     # Match result
+    global winning_team
+    global losing_team
+    team1 = ''
+    team2 = ''
 
     if (second_ing_total > first_ing_total):
-        # print('second_ing_total',second_ing_total)
         print(team_to_bowl[0].replace('_', ' '), 'Won by',
               TOTAL_WICKETS-second_ing_wickets, 'wickets')
+        print('\n')
+        winning_team = team_to_bowl
+        losing_team = team_to_bat
+
     elif (second_ing_total < first_ing_total):
-        # print('first_ing_total',first_ing_total)
         print(team_to_bat[0].replace('_', ' '), 'Won by',
               (first_ing_total-second_ing_total), 'runs')
+        print('\n')
+        winning_team = team_to_bat
+        losing_team = team_to_bowl
+
     else:
-        print('Match drawn')
+        print('\n\nMatch drawn')
+
+    # --------------------------------------------------------------------------------------------------Update Points table---------------------------------------------------------------------------------------------
+    update_points_table(winning_team, losing_team)

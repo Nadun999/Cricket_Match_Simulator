@@ -136,14 +136,12 @@ def generate_random_match():
     chosen_match = [match_between_A, match_between_B]
     global match_between
     match_between = random.choice(chosen_match)
-    print(match_between)
 
 
 def points_table():
     points_table = pd.read_excel(
         r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\tournament\\points_table.xlsx')
     df_points_table = pd.DataFrame(points_table)
-    print(df_points_table)
 
     for team in match_between:
 
@@ -161,9 +159,7 @@ def points_table():
             current_match_count = df_points_table.at[find_team_index[0], 'Matches_B']
             df_points_table.at[find_team_index,
                                'Matches_B'] = current_match_count+1
-        print(find_team_index, group, current_match_count)
-
-    print(df_points_table)
+        print('\n\n')
 
     # ------------------------------------------------------------------------Write data to excel file by creating Excel Writer Object from Pandas---------------------------------------------------------------------
 
@@ -179,7 +175,6 @@ def points_table():
 
 
 def toss():
-    print('0')
     coin = ["heads", "tails"]
     options = ['bat', 'bowl']
     global team_to_bat
@@ -189,14 +184,11 @@ def toss():
     global selection
     global toss
     global choose
-    print('1')
 
     visiting_team = random.choice(match_between)
-    print('2')
 
     if visiting_team in match_between:
         match_between.remove(visiting_team)
-    print('3')
 
     home_team = match_between[0]
 
@@ -207,8 +199,10 @@ def toss():
     # This simulates the visiting team choose bat or bowl
     choose = random.choice(options)
 
+    print('\n\n')
     print('Home Team - ', home_team[0])
     print('Visiting Team - ', visiting_team[0])
+    print('\n\n')
 
     if selection == toss:
         print(visiting_team[0], 'won the toss and chose to', choose)
@@ -218,7 +212,7 @@ def toss():
         else:
             team_to_bat = home_team
             team_to_bowl = visiting_team
-        print('4')
+
     else:
         print(home_team[0], 'won the toss and chose to', choose)
         if choose == options[0]:
@@ -227,9 +221,9 @@ def toss():
         else:
             team_to_bat = visiting_team
             team_to_bowl = home_team
-        print('5')
 
-    print('team_to_bat', team_to_bat[0])
+    print('\n\n')
+    print('\n\nteam_to_bat', team_to_bat[0])
     print('team_to_bowl', team_to_bowl[0])
 
 
@@ -279,9 +273,10 @@ def display_player_standings():
     player_standings = pd.read_excel(
         r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\tournament\\player_standings.xlsx')
     df_player_standings = pd.DataFrame(player_standings)
-
+    print('\n\nTop 5 run scores of the tournament')
     print(df_player_standings[['PLAYER NAME', 'TOTAL RUNS']].nlargest(
         5, 'TOTAL RUNS').to_string(index=False))
+    print('\n\nTop 5 wicket takers of the tournament')
     print(df_player_standings[['PLAYER NAME', 'WICKETS']].nlargest(
         5, 'WICKETS').to_string(index=False))
 
@@ -373,6 +368,8 @@ def first_innings():
                     str(bowler_onstrike[0])
 
                 # fall of wickets
+                print(
+                    '\n------------------------------------------------1st Innings Fall of Wickets-----------------------------')
                 print('FOW at', first_ing_total, ' --> ', first_ing_wickets+1,
                       ' on over -', int(first_ing_balls/6), '.', (first_ing_balls) % 6, batsman_onstrike[0][0])
 
@@ -455,7 +452,6 @@ def first_innings():
 
     # convert score_card_first_ing to a data frame for displaying
     df_score_card_first_ing = pd.DataFrame(sorted_list)
-    print(sorted_list)
 
     # converting bowler first_ing_balls to overs
     for bowler_overs_first_ing in bowler_list_first_ing:
@@ -469,8 +465,9 @@ def first_innings():
 
     # convert df_bowler_list_first_ing to a data frame for displaying
     df_bowler_list_first_ing = pd.DataFrame(bowler_list_first_ing)
-    print(bowler_list_first_ing)
 
+    print('\n\n--------------------------------------------------1st Innings Summary---------------------------------------')
+    print('\n')
     print('\nTotal-', first_ing_total, '\nwickets -', first_ing_wickets,
           '\novers -', int((first_ing_balls-1)/6), '.', (first_ing_balls-1) % 6, '\nballs', (first_ing_balls-1))
     # print('Extras - ',extras_first_ing)
@@ -481,7 +478,10 @@ def first_innings():
     df_score_card_first_ing.columns = new_headers
     df_score_card_first_ing_without_index = df_score_card_first_ing.set_index(
         'Batting')
+    print('\n\n-------------------------------------------------1st Innings Scorecard----------------------------------------')
+    print('\n')
     print(df_score_card_first_ing_without_index)
+    print('\n\n')
 
     overs = str(int((first_ing_balls-1)/6)) + \
         '.' + str((first_ing_balls-1) % 6)
@@ -490,13 +490,16 @@ def first_innings():
 
     df_first_ing_summary = pd.DataFrame(first_ing_summary, columns=[
                                         'Total', 'Wickets', 'Overs', 'Balls'])
-    print(df_first_ing_summary.to_string(index=False))
+    # print(df_first_ing_summary.to_string(index=False))
 
     new_headers = ['Bowling', 'Overs', 'Runs', 'Wickets', 'Economy']
     df_bowler_list_first_ing.columns = new_headers
     df_bowler_list_first_ing_without_index = df_bowler_list_first_ing.set_index(
         'Bowling')
+    print('\n\n--------------------------------------------1st Innings Bowling figures--------------------------------------------')
+    print('\n')
     print(df_bowler_list_first_ing_without_index)
+    print('\n\n')
 
     # ----------------------------------------------------------------------Write data to excel file by creating Excel Writer Object from Pandas-------------------------------------------------------------------------
 
@@ -612,6 +615,8 @@ def second_innings():
                     str(bowler_onstrike[0])
 
                 # fall of wickets
+                print(
+                    '\n------------------------------------------------2nd Innings Fall of Wickets-----------------------------')
                 print('FOW', second_ing_total, ' --> ', second_ing_wickets+1,
                       ' on over -', int(second_ing_balls/6), '.', (second_ing_balls) % 6, batsman_onstrike[0][0])
 
@@ -706,6 +711,7 @@ def second_innings():
     # convert df_bowler_list_second_ing to a data frame for displaying
     df_bowler_list_second_ing = pd.DataFrame(bowler_list_second_ing)
 
+    print('\n\n-----------------------------------------2nd Innings Summary---------------------------------')
     print('\nTotal-', second_ing_total, '\nwickets -', second_ing_wickets,
           '\novers -', int((second_ing_balls-1)/6), '.', (second_ing_balls-1) % 6, '\nballs', (second_ing_balls-1))
     # print('Extras',extras_second_ing)
@@ -716,7 +722,10 @@ def second_innings():
     df_score_card_second_ing.columns = new_headers
     df_score_card_second_ing_without_index = df_score_card_second_ing.set_index(
         'Batting')
+    print('\n\n---------------------------------------2nd Innings Scorecard-----------------------------------')
+    print('\n')
     print(df_score_card_second_ing_without_index)
+    print('\n\n')
 
     overs = str(int((second_ing_balls-1)/6)) + \
         '.' + str((second_ing_balls-1) % 6)
@@ -725,13 +734,15 @@ def second_innings():
 
     df_second_ing_summary = pd.DataFrame(second_ing_summary, columns=[
         'Total', 'Wickets', 'Overs', 'Balls'])
-    print(df_second_ing_summary.to_string(index=False))
 
     new_headers = ['Bowling', 'Overs', 'Runs', 'Wickets', 'Economy']
     df_bowler_list_second_ing.columns = new_headers
     df_bowler_list_second_ing_without_index = df_bowler_list_second_ing.set_index(
         'Bowling')
+    print('\n\n------------------------------------2nd Innings Bowling figures-----------------------------------')
+    print('\n')
     print(df_bowler_list_second_ing_without_index)
+    print('\n\n')
 
     # -----------------------------------------------------------------------Write data to excel file by creating Excel Writer Object from Pandas-----------------------------------------------------------------------
 
@@ -820,33 +831,47 @@ def update_points_table(winning_team, losing_team):
     writer.close()
 
 
+def display_points_table():
+    update_points_table = pd.read_excel(
+        r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\tournament\\points_table.xlsx')
+    df_update_points_table = pd.DataFrame(update_points_table)
+
+    print(df_update_points_table)
+
+
 def match_summary():
     # Toss
     if selection == toss:
+        print('\n\n---------------------------------------------Match Summary------------------------------------------')
         print(visiting_team[0].replace('_', ' '),
-              'won the toss and chose to', choose)
+              'Won the toss and chose to', choose)
+        print('\n')
     else:
         print(home_team[0].replace('_', ' '),
-              'won the toss and chose to', choose)
+              'Won the toss and chose to', choose)
+        print('\n')
 
-    # first innings top performers
+    print('---------------------------------------------First Innings Top Performers---------------------------------\n\n')
     print(team_to_bat[0].replace('_', ' '))
     print(df_score_card_first_ing_without_index.nlargest(4, 'Runs'))
 
     print('\n', team_to_bowl[0].replace('_', ' '))
     print(df_bowler_list_first_ing_without_index.nlargest(3, 'Wickets'))
 
-    print('\nTotal', first_ing_total, '/', first_ing_wickets)
+    print('\n\nTotal', first_ing_total, '/', first_ing_wickets)
+    print('\n')
 
-    # second innings top performers
+    print('---------------------------------------------Second Innings Top Performers---------------------------------\n\n')
     print(team_to_bowl[0].replace('_', ' '))
     print(df_score_card_second_ing_without_index.nlargest(4, 'Runs'))
 
     print('\n', team_to_bat[0].replace('_', ' '))
     print(df_bowler_list_second_ing_without_index.nlargest(3, 'Wickets'))
 
-    print('\nTarget', first_ing_total+1)
+    print('\n\nTarget', first_ing_total+1)
+    print('\n')
     print('Total', second_ing_total, '/', second_ing_wickets)
+    print('\n\n')
 
     # Match result
     global winning_team
@@ -855,21 +880,21 @@ def match_summary():
     team2 = ''
 
     if (second_ing_total > first_ing_total):
+        print('\n')
         print(team_to_bowl[0].replace('_', ' '), 'Won by',
               TOTAL_WICKETS-second_ing_wickets, 'wickets')
         winning_team = team_to_bowl
         losing_team = team_to_bat
 
     elif (second_ing_total < first_ing_total):
+        print('\n')
         print(team_to_bat[0].replace('_', ' '), 'Won by',
               (first_ing_total-second_ing_total), 'runs')
         winning_team = team_to_bat
         losing_team = team_to_bowl
 
     else:
-        print('Match drawn')
-    print(winning_team)
-    print(losing_team)
+        print('\n\nMatch drawn')
 
     # ----------------------------------------------------------------------------------------Update player standings---------------------------------------------------------
     update_points_table(winning_team, losing_team)
