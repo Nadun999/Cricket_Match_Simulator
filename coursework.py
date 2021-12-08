@@ -21,13 +21,12 @@ try:
         if user_input == '1':
             cricket.generate_random_match()
             cricket.points_table()
-            cricket.toss_nadun()
+            cricket.toss_coin()
             cricket.first_innings()
             cricket.second_innings()
             cricket.match_summary()
         elif user_input == '2':
             cricket.team_profile_edit(user_input)
-            global_exit = ''
         elif user_input == '3':
             cricket.display_player_standings()
         elif user_input == '4':

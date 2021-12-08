@@ -81,16 +81,21 @@ def editPlayer(teamName):
     while editTeam == '1':
         row = int(input(
             "Which player do you want to edit? \nSelect the corresponding row number :  "))
-        col = input("Column name you want to edit? ").upper()
+        col = 'PLAYER NAME'
         val = input("What should be the change then? ")
+
         EditTeam(teamName, row, col, val)
         print("your changes have been saved successfully !!!")
-        # \nOr press 'x' to exit...
         editTeam = input(
             f"Do you want to make any more changes on team {teamName} again?\n1 - yes \n0 - no ")
+        if editTeam == '0':
+            global_exit = 'y'
+        else:
+            global_exit = ''
 
 
 def team_profile_edit(getData):
+    global global_exit
     while (getData == '2') and (global_exit != 'y'):
         getGroup = input(
             "Which group do you want to see? \n1 - group A \n2 - group B \nOr press 'x' to exit...     ")
@@ -128,6 +133,8 @@ def team_profile_edit(getData):
 
             elif getTeam == '4':
                 editPlayer('Sunrisers_SriLanka')
+    else:
+        global_exit = ''
 
 
 def generate_random_match():
@@ -199,7 +206,7 @@ def points_table():
     writer.close()
 
 
-def toss_nadun():
+def toss_coin():
     coin = ["heads", "tails"]
     options = ['bat', 'bowl']
     global team_to_bat
