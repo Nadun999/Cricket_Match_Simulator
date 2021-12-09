@@ -157,9 +157,8 @@ def generate_random_match():
                 str(match_between[1][0]+'.xlsx')
             temp2 = str(match_between[1][0]) + '_vs_' + \
                 str(match_between[0][0]+'.xlsx')
-            # print(temp)
+
             if (temp1 in match_list) or (temp2 in match_list):
-                print('match duplicate')
                 continue
             else:
                 break
@@ -861,8 +860,8 @@ def display_points_table():
     update_points_table = pd.read_excel(
         r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\tournament\\points_table.xlsx')
     df_update_points_table = pd.DataFrame(update_points_table)
-
-    print(df_update_points_table)
+    print('\n')
+    print(df_update_points_table.to_string(index=False))
 
 
 def match_summary():

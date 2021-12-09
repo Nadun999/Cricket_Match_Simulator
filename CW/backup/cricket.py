@@ -81,16 +81,21 @@ def editPlayer(teamName):
     while editTeam == '1':
         row = int(input(
             "Which player do you want to edit? \nSelect the corresponding row number :  "))
-        col = input("Column name you want to edit? ").upper()
+        col = 'PLAYER NAME'
         val = input("What should be the change then? ")
+
         EditTeam(teamName, row, col, val)
         print("your changes have been saved successfully !!!")
-        # \nOr press 'x' to exit...
         editTeam = input(
             f"Do you want to make any more changes on team {teamName} again?\n1 - yes \n0 - no ")
+        if editTeam == '0':
+            global_exit = 'y'
+        else:
+            global_exit = ''
 
 
 def team_profile_edit(getData):
+    global global_exit
     while (getData == '2') and (global_exit != 'y'):
         getGroup = input(
             "Which group do you want to see? \n1 - group A \n2 - group B \nOr press 'x' to exit...     ")
@@ -128,6 +133,8 @@ def team_profile_edit(getData):
 
             elif getTeam == '4':
                 editPlayer('Sunrisers_SriLanka')
+    else:
+        global_exit = ''
 
 
 def generate_random_match():
@@ -150,9 +157,8 @@ def generate_random_match():
                 str(match_between[1][0]+'.xlsx')
             temp2 = str(match_between[1][0]) + '_vs_' + \
                 str(match_between[0][0]+'.xlsx')
-            # print(temp)
+
             if (temp1 in match_list) or (temp2 in match_list):
-                print('match duplicate')
                 continue
             else:
                 break
@@ -199,7 +205,7 @@ def points_table():
     writer.close()
 
 
-def toss():
+def toss_coin():
     coin = ["heads", "tails"]
     options = ['bat', 'bowl']
     global team_to_bat
@@ -854,8 +860,8 @@ def display_points_table():
     update_points_table = pd.read_excel(
         r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\tournament\\points_table.xlsx')
     df_update_points_table = pd.DataFrame(update_points_table)
-
-    print(df_update_points_table)
+    print('\n')
+    print(df_update_points_table.to_string(index=False))
 
 
 def match_summary():
