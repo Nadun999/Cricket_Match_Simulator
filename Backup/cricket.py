@@ -1,13 +1,10 @@
 # ----------------------------------------------------------------------------------------------------Importing Modules------------------------------------------------------------------------------------------------
 import openpyxl
 from openpyxl import load_workbook
-from openpyxl.drawing.image import Image
 import random
 import pandas as pd
 from operator import itemgetter
 import os
-import matplotlib.pyplot as plt
-from PIL import Image
 # ------------------------------------------------------------------------------------------Store information about teams and players.---------------------------------------------------------------------------------
 Mumbai_India = ['Mumbai_India',
                 r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\team_data\\Mumbai_India\\Mumbai_India.xlsx']
@@ -55,14 +52,6 @@ df_score_card_second_ing_without_index = []
 df_bowler_list_second_ing_without_index = []
 winning_team = []
 losing_team = []
-graph_first_ing_balls = []
-graph_first_ing_total = []
-graph_first_ing_fow_balls = []
-graph_first_ing_fow_total = []
-graph_second_ing_balls = []
-graph_second_ing_total = []
-graph_second_ing_fow_balls = []
-graph_second_ing_fow_total = []
 # ---------------------------------------------------------------------------------------------------Defining the functions----------------------------------------------------------------------------------------------
 
 
@@ -360,10 +349,6 @@ def first_innings():
     global first_ing_wickets
     global df_score_card_first_ing_without_index
     global df_bowler_list_first_ing_without_index
-    global graph_first_ing_balls
-    global graph_first_ing_total
-    global graph_first_ing_fow_balls
-    global graph_first_ing_fow_total
     first_ing_total = 0
     first_ing_wickets = 0
     first_ing_balls = 1
@@ -448,10 +433,6 @@ def first_innings():
                 print('FOW at', first_ing_total, ' --> ', first_ing_wickets+1,
                       ' on over -', int(first_ing_balls/6), '.', (first_ing_balls) % 6, batsman_onstrike[0][0])
 
-                # visualizing the FOW graph
-                graph_first_ing_fow_balls.append(first_ing_balls)
-                graph_first_ing_fow_total.append(first_ing_total)
-
                 # bring new batsman to the crease (batsman_onstrike)
                 if len(yet_to_bat) > 0:
                     batsman_onstrike[0] = []
@@ -499,12 +480,6 @@ def first_innings():
 
         # adding first_ing_balls to first_ing ball count
         first_ing_balls += 1
-
-        # adding first_ing_total to graph_first_ing_total
-        graph_first_ing_total.append(first_ing_total)
-
-    # assinging first innings balls to graph
-    graph_first_ing_balls = range(1, first_ing_balls)
 
     # last dismissed batsman
     last_dismissal = dismissed_batsmen[-1]
@@ -618,10 +593,6 @@ def second_innings():
     global second_ing_wickets
     global df_score_card_second_ing_without_index
     global df_bowler_list_second_ing_without_index
-    global graph_second_ing_balls
-    global graph_second_ing_total
-    global graph_second_ing_fow_balls
-    global graph_second_ing_fow_total
     second_ing_total = 0
     second_ing_wickets = 0
     second_ing_balls = 1
@@ -706,10 +677,6 @@ def second_innings():
                 print('FOW', second_ing_total, ' --> ', second_ing_wickets+1,
                       ' on over -', int(second_ing_balls/6), '.', (second_ing_balls) % 6, batsman_onstrike[0][0])
 
-                # visualizing the FOW graph
-                graph_second_ing_fow_balls.append(second_ing_balls)
-                graph_second_ing_fow_total.append(second_ing_total)
-
                 # bring new batsman to the crease (batsman_onstrike)
                 if len(yet_to_bat) > 0:
                     batsman_onstrike[0] = []
@@ -756,38 +723,6 @@ def second_innings():
         bowler_onstrike[1] = current_bowler_onstrike_balls + 1
         second_ing_balls += 1
 
-        # adding second_ing_total to graph_second_ing_total
-        graph_second_ing_total.append(second_ing_total)
-
-    # assinging second innings balls to graph
-    graph_second_ing_balls = range(1, second_ing_balls)
-
-    # plotting balls and total graph
-    plt.plot(graph_first_ing_balls, graph_first_ing_total)
-    plt.plot(graph_second_ing_balls, graph_second_ing_total)
-
-    # plotting fow graph
-    plt.plot(graph_first_ing_fow_balls, graph_first_ing_fow_total, linestyle='', linewidth=3,
-             marker='o', markerfacecolor='green', markersize=6)
-    plt.plot(graph_second_ing_fow_balls, graph_second_ing_fow_total, linestyle='', linewidth=3,
-             marker='o', markerfacecolor='red', markersize=6)
-
-    # add legend
-    plt.legend([team_to_bat[0], team_to_bowl[0],
-               team_to_bat[0]+' Wickets', team_to_bowl[0]+' Wickets'])
-
-    # giving a title to my graph
-    plt.title('Innings Trend Graph')
-
-    # naming the x axis
-    plt.xlabel('Balls')
-    # naming the y axis
-    plt.ylabel('Runs')
-
-    # saving the graph into an image
-    plt.savefig(
-        r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\myplot.png', format='png')
-
     # last dismissed batsman
     last_dismissal = dismissed_batsmen[-1]
 
@@ -825,7 +760,7 @@ def second_innings():
         bowler_overs_second_ing[1] = str(
             int((bowler_overs_second_ing[1])/6)) + '.' + str((bowler_overs_second_ing[1]) % 6)
 
-    # adding the economy for bowler
+    # additing the economy for bowler
     for bowler_economy_second_ing in bowler_list_second_ing:
         if not(float(bowler_economy_second_ing[1]) > 0):
             raise Exception('BOWLER ECONOMY NOT FOUND!!!!!!!!!!!')
@@ -890,14 +825,9 @@ def second_innings():
     df_bowler_list_second_ing.to_excel(
         writer, sheet_name='Validation', startrow=19, startcol=9, index=False)
 
-    worksheet = book.worksheets[0]
-    img = openpyxl.drawing.image.Image(
-        r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\myplot.png')
-    img.anchor = 'D30'
-    worksheet.add_image(img)
-
     writer.save()
     writer.close()
+
     # --------------------------------------------------------------------------------------------Update player standings--------------------------------------------------------------------------------------------
     player_standings(score_card_second_ing, bowler_list_second_ing)
 
@@ -970,18 +900,13 @@ def display_points_table():
 def match_summary():
     # Toss
     print('\n\n---------------------------------------------------------Match Summary------------------------------------------\n')
-    match_toss = ''
-    match_result = ''
-
     if selection == toss:
-        match_toss = str(visiting_team[0].replace(
-            '_', ' ')+' Won the toss and chose to ' + choose)
-        print(match_toss)
+        print(visiting_team[0].replace('_', ' '),
+              'Won the toss and chose to', choose)
         print('\n')
     else:
-        match_toss = str(home_team[0].replace(
-            '_', ' ')+' Won the toss and chose to ' + choose)
-        print(match_toss)
+        print(home_team[0].replace('_', ' '),
+              'Won the toss and chose to', choose)
         print('\n')
 
     print('------------------------------------------------------First Innings Top Performers---------------------------------\n\n')
@@ -1013,34 +938,20 @@ def match_summary():
 
     print('\n------------------------------------------------------------Match Result----------------------------------------------\n')
     if (second_ing_total > first_ing_total):
-        match_result = str(team_to_bowl[0].replace('_', ' ')+' Won by ' +
-                           str(TOTAL_WICKETS-second_ing_wickets)+' wickets')
-        print(match_result)
+        print(team_to_bowl[0].replace('_', ' '), 'Won by',
+              TOTAL_WICKETS-second_ing_wickets, 'wickets')
         winning_team = team_to_bowl
         losing_team = team_to_bat
 
     elif (second_ing_total < first_ing_total):
-        match_result = str(team_to_bat[0].replace(
-            '_', ' ')+' Won by ' + str(first_ing_total-second_ing_total)+' runs')
-        print(match_result)
+        print(team_to_bat[0].replace('_', ' '), 'Won by',
+              (first_ing_total-second_ing_total), 'runs')
         winning_team = team_to_bat
         losing_team = team_to_bowl
 
     else:
         print('\n\nMatch drawn')
-
-    book = load_workbook(
-        r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\tournament\\matches\\' + filename_match + '.xlsx')
-    writer = pd.ExcelWriter(
-        r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\tournament\\matches\\' + filename_match + '.xlsx', engine='openpyxl')
-    writer.book = book
-
-    worksheet = book.worksheets[0]
-    worksheet['F27'] = match_toss
-    worksheet['F28'] = match_result
-
-    writer.save()
-    writer.close()
     print('\n-------------------------------------------------------------------------------------------------------------------\n')
+
     # --------------------------------------------------------------------------------------------------Update Points table---------------------------------------------------------------------------------------------
     update_points_table(winning_team, losing_team)
