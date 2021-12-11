@@ -1,4 +1,5 @@
 # ----------------------------------------------------------------------------------------------------Importing Modules------------------------------------------------------------------------------------------------
+import openpyxl
 from openpyxl import load_workbook
 import random
 import pandas as pd
@@ -84,6 +85,34 @@ def editPlayer(teamName):
         col = 'PLAYER NAME'
         val = input("What should be the change then? ")
 
+
+# --------------------------------------------------------------Update Player name in player_standings when user edit name--------------------------------------------------------------------
+
+        team = r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\team_data\\Chennai_SouthAfrica\\Chennai_SouthAfrica.xlsx'
+        player_standings = pd.read_excel(
+            r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\tournament\\player_standings.xlsx')
+        df_player_standings = pd.DataFrame(player_standings)
+
+        wb_obj = openpyxl.load_workbook(team)
+        sheet_obj = wb_obj.active
+
+        player_name = sheet_obj.cell(row=row+2, column=1).value
+        print(str(player_name))
+
+        find_player_standing_index = df_player_standings.index[df_player_standings['PLAYER NAME'] == player_name].tolist(
+        )
+        df_player_standings.at[find_player_standing_index, 'PLAYER NAME'] = val
+
+        writer = pd.ExcelWriter(
+            r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\tournament\\player_standings.xlsx', engine='xlsxwriter')
+        workbook = writer.book
+        worksheet = workbook.add_worksheet('Sheet1')
+        writer.sheets['Sheet1'] = worksheet
+        df_player_standings.to_excel(
+            writer, sheet_name='Sheet1', startrow=0, startcol=0, index=False)
+        writer.save()
+        writer.close()
+
         EditTeam(teamName, row, col, val)
         print("your changes have been saved successfully !!!")
         editTeam = input(
@@ -142,26 +171,25 @@ def generate_random_match():
         r'E:\\IIT\\1st Year\\1st Trimester\CM1601 [PRO]  Programming Fundamentals\\Course Work\\tournament\\matches')
     match_list_count = len(match_list)
     match_list_count = match_list_count if match_list_count > 0 else 1
-    # print(match_list_count)
 
-    if match_list_count != 12:
-        for i in range(match_list_count):
-            match_between_A = random.sample(Group_A, 2)
-            match_between_B = random.sample(Group_B, 2)
+    while match_list_count != 12:
+        match_between_A = random.sample(Group_A, 2)
+        match_between_B = random.sample(Group_B, 2)
 
-            chosen_match = [match_between_A, match_between_B]
-            global match_between
-            match_between = random.choice(chosen_match)
+        chosen_match = [match_between_A, match_between_B]
+        global match_between
+        temp_match_between = random.choice(chosen_match)
 
-            temp1 = str(match_between[0][0]) + '_vs_' + \
-                str(match_between[1][0]+'.xlsx')
-            temp2 = str(match_between[1][0]) + '_vs_' + \
-                str(match_between[0][0]+'.xlsx')
+        temp1 = str(temp_match_between[0][0]) + '_vs_' + \
+            str(temp_match_between[1][0]+'.xlsx')
+        temp2 = str(temp_match_between[1][0]) + '_vs_' + \
+            str(temp_match_between[0][0]+'.xlsx')
+        print(temp1, temp2)
 
-            if (temp1 in match_list) or (temp2 in match_list):
-                continue
-            else:
-                break
+        if (temp1 not in match_list) and (temp2 not in match_list):
+            match_between = temp_match_between
+            break
+
     else:
         match_between = []
         raise IndexError('A very specific bad thing happened.')
@@ -267,6 +295,8 @@ def player_standings(batting, bowling):
     for player in batting:
         find_player_index = df_player_standings.index[df_player_standings['PLAYER NAME'] == player[0]].tolist(
         )
+        if not(len(find_player_index) > 0):
+            raise Exception('\nPLAYER NOT FOUND!!!!!!!!!')
         current_player_runs = df_player_standings.at[find_player_index[0], 'TOTAL RUNS']
         df_player_standings.at[find_player_index,
                                'TOTAL RUNS'] = current_player_runs+player[1]
@@ -732,6 +762,8 @@ def second_innings():
 
     # additing the economy for bowler
     for bowler_economy_second_ing in bowler_list_second_ing:
+        if not(float(bowler_economy_second_ing[1]) > 0):
+            raise Exception('BOWLER ECONOMY NOT FOUND!!!!!!!!!!!')
         bowler_economy_second_ing[4] = round(
             bowler_economy_second_ing[2]/float(bowler_economy_second_ing[1]), 2)
 

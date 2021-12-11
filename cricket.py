@@ -533,15 +533,16 @@ def first_innings():
     # print('Extras - ',extras_first_ing)
     print('\nLast dismissal', last_dismissal)
 
+    print('\n\n------------------------------------------------1st Innings Scorecard-------------------------------------------')
     new_headers = ['Batting', 'Runs', 'Balls Faced',
                    'MOD', 'Bowler', 'Batting No']
     df_score_card_first_ing.columns = new_headers
     df_score_card_first_ing_without_index = df_score_card_first_ing.set_index(
         'Batting')
-    print('\n\n------------------------------------------------1st Innings Scorecard-------------------------------------------')
     print('\n')
     print(df_score_card_first_ing_without_index)
 
+    # convert match summary to a dataframe
     overs = str(int((first_ing_balls-1)/6)) + \
         '.' + str((first_ing_balls-1) % 6)
     first_ing_summary = [
@@ -549,13 +550,12 @@ def first_innings():
 
     df_first_ing_summary = pd.DataFrame(first_ing_summary, columns=[
                                         'Total', 'Wickets', 'Overs', 'Balls'])
-    # print(df_first_ing_summary.to_string(index=False))
 
+    print('\n\n---------------------------------------------1st Innings Bowling figures------------------------------------------')
     new_headers = ['Bowling', 'Overs', 'Runs', 'Wickets', 'Economy']
     df_bowler_list_first_ing.columns = new_headers
     df_bowler_list_first_ing_without_index = df_bowler_list_first_ing.set_index(
         'Bowling')
-    print('\n\n---------------------------------------------1st Innings Bowling figures------------------------------------------')
     print('\n')
     print(df_bowler_list_first_ing_without_index)
     print('\n\n')
@@ -776,15 +776,16 @@ def second_innings():
     # print('Extras',extras_second_ing)
     print('\nLast dismissal', last_dismissal)
 
+    print('\n\n-----------------------------------------------------2nd Innings Scorecard---------------------------------')
     new_headers = ['Batting', 'Runs', 'Balls Faced',
                    'MOD', 'Bowler', 'Batting No']
     df_score_card_second_ing.columns = new_headers
     df_score_card_second_ing_without_index = df_score_card_second_ing.set_index(
         'Batting')
-    print('\n\n--------------------------------------------------2nd Innings Scorecard-----------------------------------')
     print('\n')
     print(df_score_card_second_ing_without_index)
 
+    # convert match summary to a dataframe
     overs = str(int((second_ing_balls-1)/6)) + \
         '.' + str((second_ing_balls-1) % 6)
     second_ing_summary = [
@@ -793,11 +794,11 @@ def second_innings():
     df_second_ing_summary = pd.DataFrame(second_ing_summary, columns=[
         'Total', 'Wickets', 'Overs', 'Balls'])
 
+    print('\n\n--------------------------------------------------2nd Innings Bowling figures------------------------------')
     new_headers = ['Bowling', 'Overs', 'Runs', 'Wickets', 'Economy']
     df_bowler_list_second_ing.columns = new_headers
     df_bowler_list_second_ing_without_index = df_bowler_list_second_ing.set_index(
         'Bowling')
-    print('\n\n----------------------------------------------2nd Innings Bowling figures-----------------------------------')
     print('\n')
     print(df_bowler_list_second_ing_without_index)
     print('\n\n')
@@ -898,8 +899,8 @@ def display_points_table():
 
 def match_summary():
     # Toss
+    print('\n\n---------------------------------------------------------Match Summary------------------------------------------\n')
     if selection == toss:
-        print('\n\n---------------------------------------------Match Summary------------------------------------------')
         print(visiting_team[0].replace('_', ' '),
               'Won the toss and chose to', choose)
         print('\n')
@@ -908,7 +909,7 @@ def match_summary():
               'Won the toss and chose to', choose)
         print('\n')
 
-    print('---------------------------------------------First Innings Top Performers---------------------------------\n\n')
+    print('------------------------------------------------------First Innings Top Performers---------------------------------\n\n')
     print(team_to_bat[0].replace('_', ' '))
     print(df_score_card_first_ing_without_index.nlargest(4, 'Runs'))
 
@@ -918,7 +919,7 @@ def match_summary():
     print('\n\nTotal', first_ing_total, '/', first_ing_wickets)
     print('\n')
 
-    print('---------------------------------------------Second Innings Top Performers---------------------------------\n\n')
+    print('------------------------------------------------------Second Innings Top Performers---------------------------------\n\n')
     print(team_to_bowl[0].replace('_', ' '))
     print(df_score_card_second_ing_without_index.nlargest(4, 'Runs'))
 
@@ -935,22 +936,22 @@ def match_summary():
     team1 = ''
     team2 = ''
 
+    print('\n------------------------------------------------------------Match Result----------------------------------------------\n')
     if (second_ing_total > first_ing_total):
         print(team_to_bowl[0].replace('_', ' '), 'Won by',
               TOTAL_WICKETS-second_ing_wickets, 'wickets')
-        print('\n')
         winning_team = team_to_bowl
         losing_team = team_to_bat
 
     elif (second_ing_total < first_ing_total):
         print(team_to_bat[0].replace('_', ' '), 'Won by',
               (first_ing_total-second_ing_total), 'runs')
-        print('\n')
         winning_team = team_to_bat
         losing_team = team_to_bowl
 
     else:
         print('\n\nMatch drawn')
+    print('\n-------------------------------------------------------------------------------------------------------------------\n')
 
     # --------------------------------------------------------------------------------------------------Update Points table---------------------------------------------------------------------------------------------
     update_points_table(winning_team, losing_team)
