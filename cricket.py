@@ -364,6 +364,11 @@ def first_innings():
     global graph_first_ing_total
     global graph_first_ing_fow_balls
     global graph_first_ing_fow_total
+    graph_first_ing_balls = []
+    graph_first_ing_total = []
+    graph_first_ing_fow_balls = []
+    graph_first_ing_fow_total = []
+
     first_ing_total = 0
     first_ing_wickets = 0
     first_ing_balls = 1
@@ -488,10 +493,6 @@ def first_innings():
                 # add batter score to first_ing_total
                 first_ing_total += batter_score
 
-                # adding extras to the total
-                # extras_first_ing = random.randint(1,10)                                                       #check this
-                # first_ing_total += extras
-
         # adding first_ing_balls to bowler
         current_bowler_onstrike_balls = 0
         current_bowler_onstrike_balls = bowler_onstrike[1]
@@ -600,8 +601,6 @@ def first_innings():
 
     df_first_ing_summary.to_excel(
         writer, sheet_name='Validation', startrow=14, startcol=0, index=False)
-    # first_ing_total.to_excel(writer,sheet_name='Validation',startrow=15 , startcol=0, index=False)
-    # first_ing_wickets.to_excel(writer,sheet_name='Validation',startrow=16 , startcol=0, index=False)
 
     df_bowler_list_first_ing.to_excel(
         writer, sheet_name='Validation', startrow=19, startcol=0, index=False)
@@ -622,6 +621,10 @@ def second_innings():
     global graph_second_ing_total
     global graph_second_ing_fow_balls
     global graph_second_ing_fow_total
+    graph_second_ing_balls = []
+    graph_second_ing_total = []
+    graph_second_ing_fow_balls = []
+    graph_second_ing_fow_total = []
     second_ing_total = 0
     second_ing_wickets = 0
     second_ing_balls = 1
@@ -746,10 +749,6 @@ def second_innings():
                 # add batter score to second_ing_total
                 second_ing_total += batter_score
 
-                # adding extras to the total
-                # extras_second_ing = random.randint(1,10)                                                       #check this
-                # second_ing_total += extras
-
         # adding second_ing_balls to bowler
         current_bowler_onstrike_balls = 0
         current_bowler_onstrike_balls = bowler_onstrike[1]
@@ -787,6 +786,9 @@ def second_innings():
     # saving the graph into an image
     plt.savefig(
         r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\myplot.png', format='png')
+
+    # resetting the plt image to avoid overwriting
+    plt.clf()
 
     # last dismissed batsman
     last_dismissal = dismissed_batsmen[-1]
@@ -884,9 +886,6 @@ def second_innings():
     df_second_ing_summary.to_excel(
         writer, sheet_name='Validation', startrow=14, startcol=9, index=False)
 
-    # second_ing_total.to_excel(writer,sheet_name='Validation',startrow=15 , startcol=9, index=False)
-    # second_ing_wickets.to_excel(writer,sheet_name='Validation',startrow=16 , startcol=9, index=False)
-
     df_bowler_list_second_ing.to_excel(
         writer, sheet_name='Validation', startrow=19, startcol=9, index=False)
 
@@ -902,50 +901,84 @@ def second_innings():
     player_standings(score_card_second_ing, bowler_list_second_ing)
 
 
-def update_points_table(winning_team, losing_team):
+def update_points_table(winning_team, losing_team, is_drawn):
     update_points_table = pd.read_excel(
         r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\tournament\\points_table.xlsx')
     df_update_points_table = pd.DataFrame(update_points_table)
 
-    if(winning_team in Group_A):
-        group = "Group A"
-        find_points_table_index = df_update_points_table.index[df_update_points_table[group] == winning_team[0]].tolist(
-        )
-        current_wins_count = df_update_points_table.at[find_points_table_index[0], 'Won']
-        df_update_points_table.at[find_points_table_index,
-                                  'Won'] = current_wins_count+1
+    if is_drawn == 0:
+        if(winning_team in Group_A):
+            group = "Group A"
+            find_points_table_index = df_update_points_table.index[df_update_points_table[group] == winning_team[0]].tolist(
+            )
+            current_wins_count = df_update_points_table.at[find_points_table_index[0], 'Won']
+            df_update_points_table.at[find_points_table_index,
+                                      'Won'] = current_wins_count+1
 
-        find_points_table_index = df_update_points_table.index[df_update_points_table[group] == losing_team[0]].tolist(
-        )
-        current_loss_count = df_update_points_table.at[find_points_table_index[0], 'Lost']
-        df_update_points_table.at[find_points_table_index,
-                                  'Lost'] = current_loss_count+1
+            find_points_table_index = df_update_points_table.index[df_update_points_table[group] == losing_team[0]].tolist(
+            )
+            current_loss_count = df_update_points_table.at[find_points_table_index[0], 'Lost']
+            df_update_points_table.at[find_points_table_index,
+                                      'Lost'] = current_loss_count+1
 
-        find_points_table_index = df_update_points_table.index[df_update_points_table[group] == winning_team[0]].tolist(
-        )
-        current_points_count = df_update_points_table.at[find_points_table_index[0], 'Points']
-        df_update_points_table.at[find_points_table_index,
-                                  'Points'] = current_points_count+2
+            find_points_table_index = df_update_points_table.index[df_update_points_table[group] == winning_team[0]].tolist(
+            )
+            current_points_count = df_update_points_table.at[find_points_table_index[0], 'Points']
+            df_update_points_table.at[find_points_table_index,
+                                      'Points'] = current_points_count+2
 
-    elif(winning_team in Group_B):
-        group = "Group B"
-        find_points_table_index = df_update_points_table.index[df_update_points_table[group] == winning_team[0]].tolist(
-        )
-        current_wins_count = df_update_points_table.at[find_points_table_index[0], 'Won_B']
-        df_update_points_table.at[find_points_table_index,
-                                  'Won_B'] = current_wins_count+1
+        elif(winning_team in Group_B):
+            group = "Group B"
 
-        find_points_table_index = df_update_points_table.index[df_update_points_table[group] == losing_team[0]].tolist(
-        )
-        current_loss_count = df_update_points_table.at[find_points_table_index[0], 'Lost_B']
-        df_update_points_table.at[find_points_table_index,
-                                  'Lost_B'] = current_loss_count+1
+            find_points_table_index = df_update_points_table.index[df_update_points_table[group] == winning_team[0]].tolist(
+            )
+            current_wins_count = df_update_points_table.at[find_points_table_index[0], 'Won_B']
+            df_update_points_table.at[find_points_table_index,
+                                      'Won_B'] = current_wins_count+1
 
-        find_points_table_index = df_update_points_table.index[df_update_points_table[group] == winning_team[0]].tolist(
-        )
-        current_points_count = df_update_points_table.at[find_points_table_index[0], 'Points_B']
-        df_update_points_table.at[find_points_table_index,
-                                  'Points_B'] = current_points_count+2
+            find_points_table_index = df_update_points_table.index[df_update_points_table[group] == losing_team[0]].tolist(
+            )
+            current_loss_count = df_update_points_table.at[find_points_table_index[0], 'Lost_B']
+            df_update_points_table.at[find_points_table_index,
+                                      'Lost_B'] = current_loss_count+1
+
+            find_points_table_index = df_update_points_table.index[df_update_points_table[group] == winning_team[0]].tolist(
+            )
+            current_points_count = df_update_points_table.at[find_points_table_index[0], 'Points_B']
+            df_update_points_table.at[find_points_table_index,
+                                      'Points_B'] = current_points_count+2
+
+    elif is_drawn == 1:
+
+        if(winning_team in Group_A):
+            group = "Group A"
+
+            find_points_table_index_1 = df_update_points_table.index[df_update_points_table[group] == winning_team[0]].tolist(
+            )
+            find_points_table_index_2 = df_update_points_table.index[df_update_points_table[group] == losing_team[0]].tolist(
+            )
+            current_points_count_1 = df_update_points_table.at[find_points_table_index_1[0], 'Points']
+            df_update_points_table.at[find_points_table_index_1,
+                                      'Points'] = current_points_count_1+1
+
+            current_points_count_2 = df_update_points_table.at[find_points_table_index_2[0], 'Points']
+            df_update_points_table.at[find_points_table_index_2,
+                                      'Points'] = current_points_count_2+1
+
+        elif(winning_team in Group_B):
+            group = "Group B"
+
+            find_points_table_index_1 = df_update_points_table.index[df_update_points_table[group] == winning_team[0]].tolist(
+            )
+            find_points_table_index_2 = df_update_points_table.index[df_update_points_table[group] == losing_team[0]].tolist(
+            )
+            current_points_count_1 = df_update_points_table.at[find_points_table_index_1[0], 'Points']
+            df_update_points_table.at[find_points_table_index_1,
+                                      'Points'] = current_points_count_1+1
+
+            current_points_count_2 = df_update_points_table.at[find_points_table_index_2[0], 'Points']
+            df_update_points_table.at[find_points_table_index_2,
+                                      'Points'] = current_points_count_2+1
 
     writer = pd.ExcelWriter(
         r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\tournament\\points_table.xlsx', engine='xlsxwriter')
@@ -1008,10 +1041,10 @@ def match_summary():
     # Match result
     global winning_team
     global losing_team
-    team1 = ''
-    team2 = ''
+    is_drawn = 0
 
     print('\n------------------------------------------------------------Match Result----------------------------------------------\n')
+
     if (second_ing_total > first_ing_total):
         match_result = str(team_to_bowl[0].replace('_', ' ')+' Won by ' +
                            str(TOTAL_WICKETS-second_ing_wickets)+' wickets')
@@ -1026,8 +1059,11 @@ def match_summary():
         winning_team = team_to_bat
         losing_team = team_to_bowl
 
-    else:
-        print('\n\nMatch drawn')
+    elif (second_ing_total == first_ing_total):
+        winning_team = team_to_bat
+        losing_team = team_to_bowl
+        is_drawn = 1
+        print('\n\n-------------------------------------------------------Match drawn-----------------------------------------------\n')
 
     book = load_workbook(
         r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\tournament\\matches\\' + filename_match + '.xlsx')
@@ -1041,6 +1077,6 @@ def match_summary():
 
     writer.save()
     writer.close()
-    print('\n-------------------------------------------------------------------------------------------------------------------\n')
+    print('\n---------------------------------------------------------------------------------------------------------------------\n')
     # --------------------------------------------------------------------------------------------------Update Points table---------------------------------------------------------------------------------------------
-    update_points_table(winning_team, losing_team)
+    update_points_table(winning_team, losing_team, is_drawn)
