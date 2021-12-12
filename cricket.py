@@ -96,10 +96,9 @@ def editPlayer(teamName):
         col = 'PLAYER NAME'
         val = input("What should be the change then? ")
 
+        # --------------------------------------------------------------Update Player name in player_standings when user edit name--------------------------------------------------------------------
 
-# --------------------------------------------------------------Update Player name in player_standings when user edit name--------------------------------------------------------------------
-
-        team = r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\team_data\\Chennai_SouthAfrica\\Chennai_SouthAfrica.xlsx'
+        team = r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\team_data\\'+teamName+'\\'+teamName+'.xlsx'
         player_standings = pd.read_excel(
             r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\tournament\\player_standings.xlsx')
         df_player_standings = pd.DataFrame(player_standings)
@@ -236,9 +235,9 @@ def points_table():
     writer = pd.ExcelWriter(
         r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\tournament\\points_table.xlsx', engine='xlsxwriter')
     workbook = writer.book
-    worksheet = workbook.add_worksheet('Validation')
-    writer.sheets['Validation'] = worksheet
-    df_points_table.to_excel(writer, sheet_name='Validation',
+    worksheet = workbook.add_worksheet('Match Summary')
+    writer.sheets['Match Summary'] = worksheet
+    df_points_table.to_excel(writer, sheet_name='Match Summary',
                              startrow=0, startcol=0, index=False)
     writer.save()
     writer.close()
@@ -453,7 +452,7 @@ def first_innings():
                 print('FOW at', first_ing_total, ' --> ', first_ing_wickets+1,
                       ' on over -', int(first_ing_balls/6), '.', (first_ing_balls) % 6, batsman_onstrike[0][0])
 
-                # visualizing the FOW graph
+                # appending the FOW data to the graph
                 graph_first_ing_fow_balls.append(first_ing_balls)
                 graph_first_ing_fow_total.append(first_ing_total)
 
@@ -593,17 +592,17 @@ def first_innings():
 
     writer = pd.ExcelWriter(match_file_path, engine='xlsxwriter')
     workbook = writer.book
-    worksheet = workbook.add_worksheet('Validation')
-    writer.sheets['Validation'] = worksheet
+    worksheet = workbook.add_worksheet('Match Summary')
+    writer.sheets['Match Summary'] = worksheet
 
     df_score_card_first_ing.to_excel(
-        writer, sheet_name='Validation', startrow=0, startcol=0, index=False)
+        writer, sheet_name='Match Summary', startrow=0, startcol=0, index=False)
 
     df_first_ing_summary.to_excel(
-        writer, sheet_name='Validation', startrow=14, startcol=0, index=False)
+        writer, sheet_name='Match Summary', startrow=14, startcol=0, index=False)
 
     df_bowler_list_first_ing.to_excel(
-        writer, sheet_name='Validation', startrow=19, startcol=0, index=False)
+        writer, sheet_name='Match Summary', startrow=19, startcol=0, index=False)
 
     writer.save()
     writer.close()
@@ -709,7 +708,7 @@ def second_innings():
                 print('FOW', second_ing_total, ' --> ', second_ing_wickets+1,
                       ' on over -', int(second_ing_balls/6), '.', (second_ing_balls) % 6, batsman_onstrike[0][0])
 
-                # visualizing the FOW graph
+                # appendind the FOW data to the graph
                 graph_second_ing_fow_balls.append(second_ing_balls)
                 graph_second_ing_fow_total.append(second_ing_total)
 
@@ -775,8 +774,8 @@ def second_innings():
     plt.legend([team_to_bat[0], team_to_bowl[0],
                team_to_bat[0]+' Wickets', team_to_bowl[0]+' Wickets'])
 
-    # giving a title to my graph
-    plt.title('Innings Trend Graph')
+    # giving a title to the graph
+    plt.title('--Innings Progression Graph--')
 
     # naming the x axis
     plt.xlabel('Balls')
@@ -787,7 +786,7 @@ def second_innings():
     plt.savefig(
         r'E:\\IIT\\1st Year\\1st Trimester\\CM1601 [PRO]  Programming Fundamentals\\Course Work\\myplot.png', format='png')
 
-    # resetting the plt image to avoid overwriting
+    # clearing the plt image to avoid overwriting
     plt.clf()
 
     # last dismissed batsman
@@ -881,13 +880,13 @@ def second_innings():
     writer.sheets = dict((ws.title, ws) for ws in book.worksheets)
 
     df_score_card_second_ing.to_excel(
-        writer, sheet_name='Validation', startrow=0, startcol=9, index=False)
+        writer, sheet_name='Match Summary', startrow=0, startcol=9, index=False)
 
     df_second_ing_summary.to_excel(
-        writer, sheet_name='Validation', startrow=14, startcol=9, index=False)
+        writer, sheet_name='Match Summary', startrow=14, startcol=9, index=False)
 
     df_bowler_list_second_ing.to_excel(
-        writer, sheet_name='Validation', startrow=19, startcol=9, index=False)
+        writer, sheet_name='Match Summary', startrow=19, startcol=9, index=False)
 
     worksheet = book.worksheets[0]
     img = openpyxl.drawing.image.Image(
